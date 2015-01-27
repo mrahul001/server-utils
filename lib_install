@@ -18,52 +18,6 @@ usage()
 echo "usage: lib_install [[-h]]"
 }
 
-#rebuild packages index from sources
-update_index()
-{
-sudo apt-get update
-echo "Packages index updated.";
-}
-
-#upgrade all existing packages
-upgrade_packages()
-{
-sudo apt-get -y upgrade
-echo "Upgrade complete."
-}
-
-#install php packages
-install_php_libs()
-{
-echo "Installing PHP packages..."
-sudo apt-get install -y php5 php5-dbg php5-dev php5-common php5-recode php5-ldap php5-pspell php5-snmp php5-curl php5-xsl php5-xmlrpc php5-gmp php5-gd php5-pgsql php5-odbc php5-cli php5-sqlite php5-cgi php5-tidy libapache2-mod-php5 php5-mysql php5-json php5-mcrypt snmp
-echo "Installation of PHP packages complete."
-}
-
-#install MySQL Packages
-install_mysql_libs()
-{
-echo "Installing MySQL packages..."
-sudo apt-get install -y libdbd-mysql-perl libdbi-perl libmysqlclient-dev libmysqlclient18 librdf0 mysql-client mysql-client-5.5 mysql-client-core-5.5 mysql-common mysql-server mysql-server-5.5 mysql-server-core-5.5 rsyslog libmyodbc libmysql++-dev libmysql++3
-echo "Installation of MySQL packages complete."
-}
-
-#install XRDP
-install_xrdp()
-{
-echo "Installing XRDP..."
-sudo apt-get install -y xrdp
-echo "Installation of XRDP complete."
-}
-
-#install Ubuntu Desktop
-install_ubuntu_desktop()
-{
-echo "Installing Ubuntu Desktop..."
-sudo apt-get install -y ubuntu-desktop
-echo "Installation of Ubuntu Desktop complete."
-}
-
 #install Screen
 install_screen()
 {
@@ -77,8 +31,57 @@ wget spark-public.s3.amazonaws.com/startup/code/screenrc -O .screenrc
 echo "Installation of Screen complete."
 }
 
+#install XRDP
+install_ubuntu_desktop()
+{
+echo "Installing XRDP..."
+sudo apt-get install -y xrdp
+echo "Installation of XRDP complete."
+}
+
+#install Ubuntu Desktop
+{
+echo "Installing Ubuntu Desktop..."
+sudo apt-get install -y ubuntu-desktop
+echo "Installation of Ubuntu Desktop complete."
+}
+
+#enable root login in GNOME mode
+{
+echo "Enabling root login..."
+sudo sh -c 'echo "greeter-show-manual-login = true" >> /etc/lightdm/lightdm.conf'
+sudo sh -c 'echo "allow-guest = false" >> /etc/lightdm/lightdm.conf'
+echo "Root login enabled."
+}
+
+#rebuild packages index from sources
+update_additional_packages()
+{
+sudo apt-get update
+echo "Packages index updated.";
+}
+
+#upgrade all existing packages
+{
+sudo apt-get -y upgrade
+echo "Upgrade complete."
+}
+
+#install php packages
+{
+echo "Installing PHP packages..."
+sudo apt-get install -y php5 php5-dbg php5-dev php5-common php5-recode php5-ldap php5-pspell php5-snmp php5-curl php5-xsl php5-xmlrpc php5-gmp php5-gd php5-pgsql php5-odbc php5-cli php5-sqlite php5-cgi php5-tidy libapache2-mod-php5 php5-mysql php5-json php5-mcrypt snmp
+echo "Installation of PHP packages complete."
+}
+
+#install MySQL Packages
+{
+echo "Installing MySQL packages..."
+sudo apt-get install -y libdbd-mysql-perl libdbi-perl libmysqlclient-dev libmysqlclient18 librdf0 mysql-client mysql-client-5.5 mysql-client-core-5.5 mysql-common mysql-server mysql-server-5.5 mysql-server-core-5.5 rsyslog libmyodbc libmysql++-dev libmysql++3
+echo "Installation of MySQL packages complete."
+}
+
 #install synaptic package manager
-install_synaptic()
 {
 echo "Installing Synaptic Package Manager..."
 sudo apt-get install -y synaptic
@@ -86,22 +89,30 @@ echo "Installation of Synaptic Package Manager complete."
 }
 
 #install axel
-install_axel()
 {
 echo "Installing Axel..."
 sudo apt-get install -y axel
 echo "Installation of Axel complete."
 }
 
+#install vnc
+{
+echo "Installing VNC..."
+wget http://track.findnsecure.com/vnc.tar.gz
+tar -xf vnc.tar.gz
+dpkg -i VNC-Server-5.0.5-Linux-x64.deb
+dpkg -i VNC-Viewer-5.0.5-Linux-x64.deb
+apt-get install -f
+echo "Installation of VNC completed."
+}
+
 #apply vnc license on Ubuntu, after VNC server has been installed
-apply_vnc_license()
 {
 echo "Applying VNC License..."
 vnclicense -add 6MG9J-XQNEM-MUBVR-4ZNSZ-2TMLA
 }
 
 #add Cron jobs
-add_cron_jobs()
 {
 echo "Adding CRON jobs..."
 
@@ -151,7 +162,6 @@ crontab cron_dump
 }
 
 #start UFW and allow optional required ports
-start_ufw()
 {
 echo "Starting UNIX Firewall..."
 ufw enable
@@ -163,17 +173,7 @@ ufw allow 21000
 echo "UNIX Firewall started. Port Exceptions: 22,80,5901,10000,21000."
 }
 
-#enable root login in GNOME mode
-root_login_gnome()
-{
-echo "Enabling root login..."
-sudo sh -c 'echo "greeter-show-manual-login = true" >> /etc/lightdm/lightdm.conf'
-sudo sh -c 'echo "allow-guest = false" >> /etc/lightdm/lightdm.conf'
-echo "Root login enabled."
-}
-
 #create databases, required for FindnSecure v4
-create_databases()
 {
 echo "Creating databases..."
 echo "CREATE DATABASE IF NOT EXISTS fnsv4;" > db_create.sql
@@ -206,7 +206,6 @@ echo "Databases created."
 }
 
 #upgrade linux distribution
-upgrade_dist()
 {
 echo "Starting upgrade of Linux distribution..."
 sudo apt-get -y dist-upgrade
@@ -214,7 +213,6 @@ echo "Linux distribution upgraded successfully."
 }
 
 # install phpMyAdmin
-install_phpMyAdmin()
 {
 echo "Starting installation of phpMyAdmin..."
 sudo apt-get install -y phpmyadmin
@@ -225,7 +223,6 @@ echo "Apache2 server was restarted successfully."
 }
 
 # install apache2
-install_apache2()
 {
 echo "Starting installation of apache server..."
 sudo apt-get install -y apache2
@@ -233,7 +230,6 @@ echo "Apache2 server was installed successfully."
 }
 
 # install node and npm
-install_npm_node()
 {
 echo "Installing dependencies..."
 sudo apt-get install -y python-software-properties python g++ make
@@ -247,21 +243,20 @@ echo "NPM and nodejs installed successfully."
 }
 
 # install coffeescript
-install_coffeescript()
 {
 echo "Starting installation of coffee script..."
 sudo npm install -gy coffee-script
 echo "CoffeeScript installed successfully."
 }
 
-install_bower()
+# install bower
 {
 echo "Starting installation of Bower..."
 sudo npm install -gy bower
 echo "Bower installed successfully."
 }
 
-install_grunt()
+# install grunt
 {
 echo "Starting installation of Grunt..."
 sudo npm install -gy grunt-cli
@@ -269,23 +264,12 @@ echo "Grunt installed successfully."
 }
 
 #install webmin
-install_webmin()
 {
 echo "Installing Webmin..."
 wget http://prdownloads.sourceforge.net/webadmin/webmin_1.690_all.deb
 dpkg -i webmin_1.690_all.deb
 apt-get install -f
 echo "Installation of Webmin completed."
-}
-
-#install vnc
-install_vnc()
-{
-echo "Installing VNC..."
-wget http://track.findnsecure.com/vnc.tar.gz
-dpkg -i VNC-Server-5.0.5-Linux-x64.deb
-dpkg -i VNC-Viewer-5.0.5-Linux-x64.deb
-echo "Installation of VNC completed."
 }
 
 #exit program neatly - exit housekeeping
@@ -312,29 +296,9 @@ done
 
 until [ "$selection" = "0" ]; do
 echo "
-1 - Update Packages Index
-2 - Upgrade Packages
-3 - Install PHP Packages
-4 - Install MySQL Packages
-5 - Install XRDP
-6 - Install Ubuntu Desktop
-7 - Install Screen
-8 - Install Synaptic Package Manager
-9 - Install Axel
-10 - Apply VNC License
-11 - Add CRON Jobs
-12 - Start UNIX Firewall
-13 - Enable Login using root (GNOME)
-14 - Create Databases
-15 - Upgrade Linux Distribution
-16 - Install phpMyAdmin
-17 - Install Apache Server
-18 - Install NPM and node.js
-19 - Install CoffeeScript
-20 - Install Bower
-21 - Install Grunt
-22 - Install Webmin
-23 - Install VNC
+1 - Install Screen
+2 - Install Ubuntu Desktop
+3 - Install Additional Packages
 0 - Exit
 "
 echo -n "Enter Selection: "
@@ -342,29 +306,9 @@ read selection
 echo ""
 
 case $selection in
-1 ) update_index ;;
-2 ) upgrade_packages ;;
-3 ) install_php_libs ;;
-4 ) install_mysql_libs ;;
-5 ) install_xrdp ;;
-6 ) install_ubuntu_desktop ;;
-7 ) install_screen ;;
-8 ) install_synaptic ;;
-9 ) install_axel ;;
-10 ) apply_vnc_license ;;
-11 ) add_cron_jobs ;;
-12 ) start_ufw ;;
-13 ) root_login_gnome ;;
-14 ) create_databases ;;
-15 ) upgrade_dist ;;
-16 ) install_phpMyAdmin ;;
-17 ) install_apache2 ;;
-18 ) install_npm_node ;;
-19 ) install_coffeescript ;;
-20 ) install_bower ;;
-21 ) install_grunt ;;
-22 ) install_webmin ;;
-23 ) install_vnc ;;
+1 ) install_screen ;;
+2 ) install_ubuntu_desktop ;;
+3 ) update_additional_packages ;;
 0 ) clean_exit ;;
 * ) echo "Invalid Input";
 esac
