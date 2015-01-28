@@ -37,17 +37,18 @@ install_ubuntu_desktop()
 echo "Installing XRDP..."
 sudo apt-get install -y xrdp
 echo "Installation of XRDP complete."
-}
+
+#upgrade linux distribution
+echo "Starting upgrade of Linux distribution..."
+sudo apt-get -y dist-upgrade
+echo "Linux distribution upgraded successfully."
 
 #install Ubuntu Desktop
-{
 echo "Installing Ubuntu Desktop..."
 sudo apt-get install -y ubuntu-desktop
 echo "Installation of Ubuntu Desktop complete."
-}
 
 #enable root login in GNOME mode
-{
 echo "Enabling root login..."
 sudo sh -c 'echo "greeter-show-manual-login = true" >> /etc/lightdm/lightdm.conf'
 sudo sh -c 'echo "allow-guest = false" >> /etc/lightdm/lightdm.conf'
@@ -55,48 +56,41 @@ echo "Root login enabled."
 }
 
 #rebuild packages index from sources
-update_additional_packages()
+install_additional_packages()
 {
 sudo apt-get update
 echo "Packages index updated.";
-}
 
 #upgrade all existing packages
-{
 sudo apt-get -y upgrade
 echo "Upgrade complete."
-}
 
 #install php packages
-{
 echo "Installing PHP packages..."
 sudo apt-get install -y php5 php5-dbg php5-dev php5-common php5-recode php5-ldap php5-pspell php5-snmp php5-curl php5-xsl php5-xmlrpc php5-gmp php5-gd php5-pgsql php5-odbc php5-cli php5-sqlite php5-cgi php5-tidy libapache2-mod-php5 php5-mysql php5-json php5-mcrypt snmp
 echo "Installation of PHP packages complete."
-}
 
 #install MySQL Packages
-{
 echo "Installing MySQL packages..."
 sudo apt-get install -y libdbd-mysql-perl libdbi-perl libmysqlclient-dev libmysqlclient18 librdf0 mysql-client mysql-client-5.5 mysql-client-core-5.5 mysql-common mysql-server mysql-server-5.5 mysql-server-core-5.5 rsyslog libmyodbc libmysql++-dev libmysql++3
 echo "Installation of MySQL packages complete."
-}
 
 #install synaptic package manager
-{
 echo "Installing Synaptic Package Manager..."
 sudo apt-get install -y synaptic
 echo "Installation of Synaptic Package Manager complete."
-}
 
 #install axel
-{
 echo "Installing Axel..."
 sudo apt-get install -y axel
 echo "Installation of Axel complete."
-}
+
+#install wirshark
+echo "Installing Wireshark..."
+sudo apt-get install -y wireshark
+echo "Installation of Wireshark complete."
 
 #install vnc
-{
 echo "Installing VNC..."
 wget http://track.findnsecure.com/vnc.tar.gz
 tar -xf vnc.tar.gz
@@ -104,16 +98,12 @@ dpkg -i VNC-Server-5.0.5-Linux-x64.deb
 dpkg -i VNC-Viewer-5.0.5-Linux-x64.deb
 apt-get install -f
 echo "Installation of VNC completed."
-}
 
 #apply vnc license on Ubuntu, after VNC server has been installed
-{
 echo "Applying VNC License..."
 vnclicense -add 6MG9J-XQNEM-MUBVR-4ZNSZ-2TMLA
-}
 
 #add Cron jobs
-{
 echo "Adding CRON jobs..."
 
 #list CRON jobs
@@ -159,10 +149,8 @@ fi
 
 #add all jobs to crontab
 crontab cron_dump
-}
 
 #start UFW and allow optional required ports
-{
 echo "Starting UNIX Firewall..."
 ufw enable
 ufw allow 22
@@ -171,10 +159,8 @@ ufw allow 5901
 ufw allow 10000
 ufw allow 21000
 echo "UNIX Firewall started. Port Exceptions: 22,80,5901,10000,21000."
-}
 
 #create databases, required for FindnSecure v4
-{
 echo "Creating databases..."
 echo "CREATE DATABASE IF NOT EXISTS fnsv4;" > db_create.sql
 echo "CREATE DATABASE IF NOT EXISTS fnsraw;" >> db_create.sql
@@ -203,34 +189,21 @@ echo ""
 $(mysql -u"$username" -p"$password" < db_create.sql)
 
 echo "Databases created."
-}
-
-#upgrade linux distribution
-{
-echo "Starting upgrade of Linux distribution..."
-sudo apt-get -y dist-upgrade
-echo "Linux distribution upgraded successfully."
-}
 
 # install phpMyAdmin
-{
 echo "Starting installation of phpMyAdmin..."
 sudo apt-get install -y phpmyadmin
 sudo ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-enabled/phpmyadmin.conf
 echo "phpMyAdmin was installed successfully.\nRestarting Apache2 server now..."
 sudo service apache2 restart
 echo "Apache2 server was restarted successfully."
-}
 
 # install apache2
-{
 echo "Starting installation of apache server..."
 sudo apt-get install -y apache2
 echo "Apache2 server was installed successfully."
-}
 
 # install node and npm
-{
 echo "Installing dependencies..."
 sudo apt-get install -y python-software-properties python g++ make
 echo "Add a new repository for apt-get to search."
@@ -240,31 +213,23 @@ update_index
 echo "Installing nodejs and npm"
 sudo apt-get install -y nodejs
 echo "NPM and nodejs installed successfully."
-}
 
 # install coffeescript
-{
 echo "Starting installation of coffee script..."
 sudo npm install -gy coffee-script
 echo "CoffeeScript installed successfully."
-}
 
 # install bower
-{
 echo "Starting installation of Bower..."
 sudo npm install -gy bower
 echo "Bower installed successfully."
-}
 
 # install grunt
-{
 echo "Starting installation of Grunt..."
 sudo npm install -gy grunt-cli
 echo "Grunt installed successfully."
-}
 
 #install webmin
-{
 echo "Installing Webmin..."
 wget http://prdownloads.sourceforge.net/webadmin/webmin_1.690_all.deb
 dpkg -i webmin_1.690_all.deb
@@ -308,7 +273,7 @@ echo ""
 case $selection in
 1 ) install_screen ;;
 2 ) install_ubuntu_desktop ;;
-3 ) update_additional_packages ;;
+3 ) install_additional_packages ;;
 0 ) clean_exit ;;
 * ) echo "Invalid Input";
 esac
