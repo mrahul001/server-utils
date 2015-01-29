@@ -21,7 +21,7 @@ echo "usage: lib_install [[-h]]"
 #install Screen
 install_screen()
 {
-echo "Installing Screen..."
+echo "Installing Screen... "
 #change to /home directory before starting
 cd $HOME
 
